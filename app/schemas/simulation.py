@@ -1,4 +1,9 @@
 # Guardar en: tactical-sim-ai-engine/app/schemas/simulation.py (reemplaza el archivo actual)
+#
+# CAMBIO: se agregan 5 campos OPCIONALES con valor por defecto a la respuesta
+# (predicted_defense, defense_scheme, clean_shot_probability, pass_effectiveness,
+# model_info). Los campos anteriores conservan nombre y tipo, asi que el backend
+# Java y el frontend actuales siguen funcionando sin cambios.
 
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -40,4 +45,22 @@ class TacticalSimulationResponse(BaseModel):
     )
     spin_rate_rpm: Optional[float] = Field(
         None, description="Solo tenis: spin estimado del saque."
+    )
+
+    # --- Campos nuevos del Modelo Predictivo + "Cuerpo Tecnico Rival" (todos opcionales) ---
+    predicted_defense: List[PlayerPosition] = Field(
+        default_factory=list,
+        description="Posicion estimada de los defensores (tenis: del restador) DESPUES de reaccionar a la jugada.",
+    )
+    defense_scheme: str = Field(
+        "", description="Esquema defensivo legible, ej. 'Hombre a hombre con ayuda en la pintura'."
+    )
+    clean_shot_probability: Optional[float] = Field(
+        None, description="Baloncesto: probabilidad de que el portador anote si tira contra la defensa predicha."
+    )
+    pass_effectiveness: Optional[float] = Field(
+        None, description="Baloncesto: probabilidad de completar el mejor pase disponible (o el pase recomendado)."
+    )
+    model_info: str = Field(
+        "", description="Que modelo produjo la probabilidad y con que datos se entreno (o aviso de fallback)."
     )
