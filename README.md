@@ -22,6 +22,10 @@ python -m pytest -q                 # 38 pruebas
 | POST | `/api/v1/simulation/...` | Simulación táctica (la consume el backend) |
 | GET | `/api/v1/model/info` | Resumen público del modelo (sin pesos), usado por la página `/modelo` del frontend |
 
+## Seguridad entre servicios
+
+Si defines la variable de entorno `AI_INTERNAL_KEY`, las rutas `/api/v1/simulation/*` exigen la cabecera `X-Internal-Key` con ese mismo valor (el backend la envía). Sin la clave responden 401. `/health` y `/api/v1/model/info` siguen públicos. Si la variable no existe, no se exige nada (útil en desarrollo local).
+
 ## Despliegue
 
 Render (Python 3.11.9, ver `runtime.txt`). `requirements-dev.txt` no se instala en producción.
